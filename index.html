@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حاسبة تاريخ تجديد الإقامة</title>
+    
+    <meta name="google-site-verification" content="Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I" />
+
+    <meta name="description" content="حاسبة إلكترونية سريعة لحساب تاريخ تجديد الإقامة قبل سنة إلا 10 أيام بدقة وسهولة لجميع الهواتف والأجهزة.">
+    <meta name="keywords" content="حساب الإقامة, تجديد الإقامة, موعد التجديد, حاسبة الإقامة, تاريخ الإقامة, حساب انتهاء الاقامة">
+
     <style>
         :root {
-            --primary-color: #2563eb;
-            --bg-color: #f8fafc;
+            --primary-color: #0284c7;
+            --bg-color: #f1f5f9;
             --card-bg: #ffffff;
-            --text-color: #1e293b;
+            --text-color: #0f172a;
+            --danger-color: #ef4444;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,74 +31,125 @@
         }
         .container {
             background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 35px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             text-align: center;
         }
         h2 {
             color: var(--primary-color);
             margin-bottom: 25px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 700;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: right;
         }
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
             font-size: 0.95rem;
+            color: #475569;
+        }
+        /* صندوق مرن لاحتواء حقل التاريخ وزر الحذف */
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         input[type="date"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-family: inherit;
             box-sizing: border-box;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            text-align: right;
+            direction: rtl;
         }
         input[type="date"]:focus {
             outline: none;
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+        }
+        /* تصميم زر الحذف التلقائي السريع */
+        .clear-btn {
+            background-color: #fee2e2;
+            border: 2px solid #fca5a5;
+            border-radius: 10px;
+            padding: 12px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .clear-btn:hover {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        .clear-btn:hover .trash-icon {
+            fill: #ffffff;
+        }
+        .trash-icon {
+            width: 20px;
+            height: 20px;
+            fill: var(--danger-color);
+            transition: fill 0.2s ease;
         }
         .result-box {
             margin-top: 25px;
-            padding: 15px;
-            background-color: #eff6ff;
-            border-right: 5px solid var(--primary-color);
-            border-radius: 8px;
-            text-align: right;
+            padding: 20px;
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            text-align: center;
             display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .result-title {
-            font-size: 0.9rem;
-            color: #64748b;
-            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #0369a1;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
         .result-date {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #1e3a8a;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0c4a6e;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>حاسبة موعد التجديد (سنة إلا 10 أيام)</h2>
+    <h2>حاسبة تاريخ تجديد الإقامة</h2>
     
     <div class="form-group">
-        <label for="expiryDate">أدخل تاريخ انتهاء الإقامة:</label>
-        <input type="date" id="expiryDate" onchange="calculateReminderDate()">
+        <label for="expiryDate">تاريخ انتهاء الإقامة الحالية:</label>
+        <div class="input-wrapper">
+            <input type="date" id="expiryDate" onchange="calculateReminderDate()">
+            <button class="clear-btn" onclick="clearDate()" title="مسح التاريخ بالكامل">
+                <svg class="trash-icon" viewBox="0 0 24 24">
+                    <path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9m2 5h2v10h-2V8m-4 0h2v10H7V8m8 0h2v10h-2V8z"/>
+                </svg>
+            </button>
+        </div>
     </div>
 
     <div class="result-box" id="resultBox">
-        <div class="result-title">تاريخ التذكير المستهدف (قبل سنة و 10 أيام):</div>
+        <div class="result-title">التاريخ المستهدف (سنة إلا 10 أيام):</div>
         <div class="result-date" id="reminderDateText">-- / -- / ----</div>
     </div>
 </div>
@@ -101,23 +159,27 @@
         const inputDateValue = document.getElementById('expiryDate').value;
         if (!inputDateValue) return;
 
-        // تحويل النص إلى تاريخ
         let expiryDate = new Date(inputDateValue);
 
-        // الحسبة: نرجع سنة للخلف (طرح سنة)، ثم نتقدم 10 أيام (إضافة 10 أيام)
+        // الحسبة: نرجع سنة للخلف ونضيف 10 أيام
         expiryDate.setFullYear(expiryDate.getFullYear() - 1);
         expiryDate.setDate(expiryDate.getDate() + 10);
 
-        // تنسيق التاريخ ليظهر بشكل مناسب (يوم / شهر / سنة)
+        // التنسيق العربي: يوم / شهر / سنة
         const day = String(expiryDate.getDate()).padStart(2, '0');
-        const month = String(expiryDate.getMonth() + 1).padStart(2, '0'); // الأشهر تبدأ من 0 في الـ JS
+        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
         const year = expiryDate.getFullYear();
 
         const formattedDate = `${day} / ${month} / ${year}`;
 
-        // عرض النتيجة وتغيير المظهر ليظهر الصندوق
         document.getElementById('reminderDateText').innerText = formattedDate;
         document.getElementById('resultBox').style.display = 'block';
+    }
+
+    // دالة الحذف التلقائي الفوري بدون تحديد الخانات
+    function clearDate() {
+        document.getElementById('expiryDate').value = ''; // تفريغ حقل التاريخ تماماً
+        document.getElementById('resultBox').style.display = 'none'; // إخفاء صندوق النتيجة
     }
 </script>
 
