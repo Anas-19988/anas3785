@@ -60,7 +60,7 @@
             gap: 10px;
             align-items: center;
         }
-        /* تعديل حقل الإدخال ليظهر النص بشكل مستقيم ومنظم */
+        /* ضبط الحقل ليدعم الكتابة والاتجاه من اليمين إلى اليسار بشكل كامل */
         input.date-input {
             flex: 1;
             padding: 14px;
@@ -70,8 +70,8 @@
             font-family: inherit;
             box-sizing: border-box;
             transition: all 0.3s ease;
-            text-align: center;
-            direction: ltr; /* لضمان عدم قلب الحروف الاحتياطية */
+            text-align: right; /* محاذاة النص لليمين */
+            direction: rtl;    /* الكتابة من اليمين إلى اليسار */
         }
         input.date-input:focus {
             outline: none;
@@ -162,4 +162,27 @@
 
         let expiryDate = new Date(inputDateValue);
 
-        expiry
+        expiryDate.setFullYear(expiryDate.getFullYear() - 1);
+        expiryDate.setDate(expiryDate.getDate() + 10);
+
+        const day = String(expiryDate.getDate()).padStart(2, '0');
+        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+        const year = expiryDate.getFullYear();
+
+        // التنسيق النهائي يظهر بشكل عربي من اليمين لليسار
+        const formattedDate = `${day} / ${month} / ${year}`;
+
+        document.getElementById('reminderDateText').innerText = formattedDate;
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function clearDate() {
+        const input = document.getElementById('expiryDate');
+        input.value = ''; 
+        input.type = 'text'; 
+        document.getElementById('resultBox').style.display = 'none'; 
+    }
+</script>
+
+</body>
+</html>
