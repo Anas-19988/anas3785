@@ -63,20 +63,21 @@
             gap: 10px;
             align-items: center;
         }
-        /* حقل نصي ثابت عربي 100% لا يتغير اتجاهه أبداً عند الضغط */
         input.date-input {
             flex: 1;
             padding: 14px;
             border: 2px solid #cbd5e1;
             border-radius: 10px;
             font-size: 1.1rem;
-            font-family: inherit;
             box-sizing: border-box;
             transition: all 0.3s ease;
             text-align: right; 
-            direction: rtl;    /* ثابت من اليمين إلى اليسار دائماً */
+            direction: rtl;   
             background-color: #ffffff;
             cursor: pointer;
+            /* إجبار المتصفح على عرض الأرقام الإنجليزية داخل المربع */
+            font-variant-numeric: lining-nums;
+            font-feature-settings: "lnum";
         }
         input.date-input:focus {
             outline: none;
@@ -131,10 +132,14 @@
             font-weight: 800;
             color: #0c4a6e;
             letter-spacing: 1px;
+            /* إجبار أرقام النتيجة على الظهور بالتسلسل الإنجليزي أيضاً */
+            font-variant-numeric: lining-nums;
+            font-feature-settings: "lnum";
         }
-        /* تنسيق تخصيص التقويم الذكي ليكون متناسقاً وعربياً */
-        .flatpickr-calendar {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        /* إجبار لوحة التقويم بالكامل على استخدام الأرقام الإنجليزية */
+        .flatpickr-calendar, .flatpickr-day, .flatpickr-months, .flatpickr-current-month .numInputWrapper {
+            font-variant-numeric: lining-nums !important;
+            font-feature-settings: "lnum" !important;
         }
     </style>
 </head>
@@ -150,4 +155,54 @@
             
             <button class="clear-btn" onclick="clearDate()" title="مسح التاريخ بالكامل">
                 <svg class="trash-icon" viewBox="0 0 24 24">
-                    <path d="M9 3v1H4v2h1v13a2
+                    <path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9m2 5h2v10h-2V8m-4 0h2v10H7V8m8 0h2v10h-2V8z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="result-box" id="resultBox">
+        <div class="result-title">التاريخ المستهدف (سنة إلا 10 أيام):</div>
+        <div class="result-date" id="reminderDateText">-- / -- / ----</div>
+    </div>
+</div>
+
+<script>
+    // إعداد التخصيص العربي للتقويم مع تعديل الأرقام لتصبح إنجليزية تلقائياً
+    flatpickr.l10ns.ar.numeralArr = []; // هذا السطر يقوم بإلغاء تحويل الأرقام إلى هندية (١، ٢، ٣)
+    
+    const picker = flatpickr("#expiryDate", {
+        locale: "ar",            
+        dateFormat: "d / m / Y", 
+        disableMobile: "true",   
+        onChange: function(selectedDates, dateStr, instance) {
+            if (dateStr) {
+                calculateReminderDate(selectedDates[0]);
+            }
+        }
+    });
+
+    function calculateReminderDate(selectedDate) {
+        let expiryDate = new Date(selectedDate);
+
+        expiryDate.setFullYear(expiryDate.getFullYear() - 1);
+        expiryDate.setDate(expiryDate.getDate() + 10);
+
+        const day = String(expiryDate.getDate()).padStart(2, '0');
+        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+        const year = expiryDate.getFullYear();
+
+        const formattedDate = `${day} / ${month} / ${year}`;
+
+        document.getElementById('reminderDateText').innerText = formattedDate;
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function clearDate() {
+        picker.clear(); 
+        document.getElementById('resultBox').style.display = 'none'; 
+    }
+</script>
+
+</body>
+</html>
