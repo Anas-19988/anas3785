@@ -7,8 +7,11 @@
     
     <meta name="google-site-verification" content="Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I" />
 
-    <meta name="description" content="حاسبة إلكترونية سريعة لحساب تاريخ تجديد الإقامة قبل سنة إلا 10 أيام بدقة وسهولة لجميع الهواتف والأجهزة.">
-    <meta name="keywords" content="حساب الإقامة, تجديد الإقامة, موعد التجديد, حاسبة الإقامة, تاريخ الإقامة, حساب انتهاء الاقامة">
+    <meta name="description" content="حاسبة إلكترونية سريعة لحساب تاريخ تجديد الإقامة قبل سنة إلا 10 أيام بدقة وسهولة.">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
 
     <style>
         :root {
@@ -60,7 +63,7 @@
             gap: 10px;
             align-items: center;
         }
-        /* ضبط الحقل ليدعم الكتابة والاتجاه من اليمين إلى اليسار بشكل كامل */
+        /* حقل نصي ثابت عربي 100% لا يتغير اتجاهه أبداً عند الضغط */
         input.date-input {
             flex: 1;
             padding: 14px;
@@ -70,8 +73,10 @@
             font-family: inherit;
             box-sizing: border-box;
             transition: all 0.3s ease;
-            text-align: right; /* محاذاة النص لليمين */
-            direction: rtl;    /* الكتابة من اليمين إلى اليسار */
+            text-align: right; 
+            direction: rtl;    /* ثابت من اليمين إلى اليسار دائماً */
+            background-color: #ffffff;
+            cursor: pointer;
         }
         input.date-input:focus {
             outline: none;
@@ -100,7 +105,6 @@
             width: 20px;
             height: 20px;
             fill: var(--danger-color);
-            transition: fill 0.2s ease;
         }
         .result-box {
             margin-top: 25px;
@@ -128,6 +132,10 @@
             color: #0c4a6e;
             letter-spacing: 1px;
         }
+        /* تنسيق تخصيص التقويم الذكي ليكون متناسقاً وعربياً */
+        .flatpickr-calendar {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        }
     </style>
 </head>
 <body>
@@ -138,51 +146,8 @@
     <div class="form-group">
         <label for="expiryDate">تاريخ انتهاء الإقامة الحالية:</label>
         <div class="input-wrapper">
-            <input type="text" id="expiryDate" class="date-input" placeholder="يوم / شهر / سنة" 
-                   onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'" onchange="calculateReminderDate()">
+            <input type="text" id="expiryDate" class="date-input" placeholder="يوم / شهر / سنة" readonly>
             
             <button class="clear-btn" onclick="clearDate()" title="مسح التاريخ بالكامل">
                 <svg class="trash-icon" viewBox="0 0 24 24">
-                    <path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9m2 5h2v10h-2V8m-4 0h2v10H7V8m8 0h2v10h-2V8z"/>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <div class="result-box" id="resultBox">
-        <div class="result-title">التاريخ المستهدف (سنة إلا 10 أيام):</div>
-        <div class="result-date" id="reminderDateText">-- / -- / ----</div>
-    </div>
-</div>
-
-<script>
-    function calculateReminderDate() {
-        const inputDateValue = document.getElementById('expiryDate').value;
-        if (!inputDateValue) return;
-
-        let expiryDate = new Date(inputDateValue);
-
-        expiryDate.setFullYear(expiryDate.getFullYear() - 1);
-        expiryDate.setDate(expiryDate.getDate() + 10);
-
-        const day = String(expiryDate.getDate()).padStart(2, '0');
-        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
-        const year = expiryDate.getFullYear();
-
-        // التنسيق النهائي يظهر بشكل عربي من اليمين لليسار
-        const formattedDate = `${day} / ${month} / ${year}`;
-
-        document.getElementById('reminderDateText').innerText = formattedDate;
-        document.getElementById('resultBox').style.display = 'block';
-    }
-
-    function clearDate() {
-        const input = document.getElementById('expiryDate');
-        input.value = ''; 
-        input.type = 'text'; 
-        document.getElementById('resultBox').style.display = 'none'; 
-    }
-</script>
-
-</body>
-</html>
+                    <path d="M9 3v1H4v2h1v13a2
