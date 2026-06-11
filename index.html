@@ -19,17 +19,17 @@
             --muted-text: #cbd5e1;
             --border-color: rgba(255, 255, 255, 0.2);
             --danger-color: #ef4444;
-            --card-bg: rgba(15, 23, 42, 0.7); /* خلفية زجاجية داكنة لتناسب الصورة */
+            --card-bg: rgba(15, 23, 42, 0.75); /* خلفية زجاجية داكنة لتناسب الصورة */
             --box-bg: rgba(12, 74, 110, 0.4);
             --box-border: #0284c7;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* إضافة صورة ميسي مع شعار الأرجنتين كخلفية كاملة للموقع */
-            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1671377317711-209bfd4dfec8?q=80&w=1920&auto=format&fit=crop');
+            /* تم استبدال الرابط برابط مضمون ومباشر لصورة ميسي والأرجنتين */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1695240833139-2a9d8fa9e5bb?q=80&w=1920&auto=format&fit=crop');
             background-size: cover;
-            background-position: center top;
+            background-position: center center;
             background-attachment: fixed;
             background-repeat: no-repeat;
             color: var(--text-color);
@@ -49,7 +49,7 @@
             padding: 35px 25px;
             border-radius: 24px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             width: 100%;
             max-width: 440px;
             text-align: center;
@@ -97,7 +97,7 @@
             box-sizing: border-box;
             transition: all 0.3s ease;
             text-align: right; 
-            direction: rtl; /* تم إصلاحها هنا بدقة لتفادي المشكلة */
+            direction: rtl; 
             cursor: pointer;
             font-variant-numeric: lining-nums;
             font-feature-settings: "lnum";
@@ -150,7 +150,6 @@
 
         .countdown-text { margin-top: 10px; font-size: 0.9rem; color: #e2e8f0; font-weight: 500; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
 
-        /* جدول السجل الشفاف المتناسق مع الخلفية */
         .history-section { margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
         .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: #38bdf8; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
         .history-table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); font-size: 0.85rem; }
@@ -163,7 +162,6 @@
         .flatpickr-calendar, .flatpickr-day, .flatpickr-months, .flatpickr-current-month .numInputWrapper {
             font-variant-numeric: lining-nums !important; font-feature-settings: "lnum" !important;
         }
-        /* تعديل ألوان التقويم ليناسب الثيم الداكن */
         .flatpickr-calendar { background: #1e293b !important; border: 1px solid #334155 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important; }
         .flatpickr-day { color: #f8fafc !important; }
         .flatpickr-day.selected { background: #0284c7 !important; border-color: #0284c7 !important; }
@@ -265,4 +263,54 @@
     function copyResult() {
         const dateText = document.getElementById('reminderDateText').innerText;
         navigator.clipboard.writeText(dateText).then(() => {
-            alert('تم نسخ التاريخ بنجاح: ' + date
+            alert('تم نسخ التاريخ بنجاح: ' + dateText);
+        });
+    }
+
+    function shareWhatsApp() {
+        const dateText = document.getElementById('reminderDateText').innerText;
+        const text = `تاريخ التذكير المستهدف لتجديد الإقامة (سنة إلا 10 أيام) هو: ${dateText}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function clearDate() {
+        picker.clear(); 
+        document.getElementById('resultBox').style.display = 'none'; 
+    }
+
+    function saveToHistory(expiry, reminder) {
+        let history = JSON.parse(localStorage.getItem('iqama_history')) || [];
+        if(history.length > 0 && history[0].expiry === expiry) return;
+        
+        history.unshift({ expiry, reminder });
+        if (history.length > 5) history.pop();
+        
+        localStorage.setItem('iqama_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('iqama_history')) || [];
+        const historySection = document.getElementById('historySection');
+        const historyBody = document.getElementById('historyBody');
+        
+        if (history.length === 0) {
+            historySection.style.display = 'none';
+            return;
+        }
+        
+        historyBody.innerHTML = '';
+        history.forEach(item => {
+            const row = `<tr><td>${item.expiry}</td><td>${item.reminder}</td></tr>`;
+            historyBody.innerHTML += row;
+        });
+        historySection.style.display = 'block';
+    }
+
+    window.onload = function() {
+        renderHistory();
+    }
+</script>
+
+</body>
+</html>
