@@ -19,8 +19,8 @@
             --muted-text: #334155;
             --border-color: rgba(2, 132, 199, 0.3);
             --danger-color: #ef4444;
-            --card-bg: rgba(255, 255, 255, 0.5); /* صندوق زجاجي نقي */
-            --box-bg: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.55); 
+            --box-bg: rgba(255, 255, 255, 0.85);
             --box-border: #0284c7;
         }
 
@@ -35,7 +35,6 @@
             align-items: center;
             box-sizing: border-box;
             
-            /* رسم علم الأرجنتين برمجياً بنسبة 100% ليكون سريعاً ومضموناً */
             background: linear-gradient(
                 to bottom,
                 #74acdf 0%, #74acdf 33.33%,
@@ -46,7 +45,6 @@
             overflow-x: hidden;
         }
 
-        /* رسم شمس الأرجنتين الذهبية برمجياً بالكامل في المنتصف بدون استخدام صور خارجية */
         .sun-bg {
             position: absolute;
             top: 50%;
@@ -56,7 +54,7 @@
             height: 200px;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.18; /* مدمجة بشكل ناعم وراقي في الخلفية خلف الصندوق */
+            opacity: 0.18; 
         }
 
         .container {
@@ -84,7 +82,7 @@
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: right;
         }
 
@@ -147,6 +145,61 @@
         .clear-btn:hover .trash-icon { fill: #ffffff; }
         .trash-icon { width: 20px; height: 20px; fill: #ef4444; }
 
+        /* خيار التبديل الذكي للميزة المخصصة */
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.4);
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(2, 132, 199, 0.15);
+        }
+        .toggle-label { font-weight: 600; font-size: 0.9rem; color: #0369a1; }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #0284c7; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* قسم شريط سحب الأيام التفاعلي */
+        .custom-days-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            animation: fadeIn 0.3s ease-out;
+            text-align: right;
+        }
+        .slider-wrapper { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .range-slider { flex: 1; accent-color: #0284c7; cursor: pointer; height: 6px; }
+        .days-badge { background: #0284c7; color: #ffffff; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; font-variant-numeric: lining-nums; }
+
         .result-box {
             margin-top: 25px;
             padding: 20px;
@@ -167,7 +220,6 @@
 
         .countdown-text { margin-top: 10px; font-size: 0.9rem; color: #1e293b; font-weight: 600; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
 
-        /* جدول السجل */
         .history-section { position: relative; z-index: 1; margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
         .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: #0369a1; }
         .history-table { width: 100%; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 14px; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.8); font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -175,7 +227,7 @@
         .history-table th { background-color: rgba(2, 132, 199, 0.25); color: #0369a1; font-weight: 700; }
         .history-table tr:last-child td { border-bottom: none; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .flatpickr-calendar, .flatpickr-day, .flatpickr-months, .flatpickr-current-month .numInputWrapper {
             font-variant-numeric: lining-nums !important; font-feature-settings: "lnum" !important;
@@ -206,8 +258,24 @@
         </div>
     </div>
 
+    <div class="toggle-container">
+        <div class="toggle-label">تعديل عدد الأيام يدوياً (سحب مخصص)</div>
+        <label class="switch">
+            <input type="checkbox" id="customToggle" onchange="toggleCustomDays()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="custom-days-section" id="customDaysSection">
+        <label>اسحب لتحديد عدد الأيام المراد طرحها:</label>
+        <div class="slider-wrapper">
+            <input type="range" id="daysSlider" class="range-slider" min="1" max="90" value="10" oninput="handleSliderInput()">
+            <span class="days-badge" id="daysValue">10 أيام</span>
+        </div>
+    </div>
+
     <div class="result-box" id="resultBox">
-        <div class="result-title">التاريخ المستهدف (سنة إلا 10 أيام):</div>
+        <div class="result-title" id="resultTitleText">التاريخ المستهدف (سنة إلا 10 أيام):</div>
         <div class="result-date" id="reminderDateText">-- / -- / ----</div>
         <div class="countdown-text" id="countdownText"></div>
         
@@ -233,6 +301,8 @@
 
 <script>
     flatpickr.l10ns.ar.numeralArr = []; 
+    let selectedGlobalDate = null;
+    let originalGlobalStr = "";
     
     const picker = flatpickr("#expiryDate", {
         locale: "ar",            
@@ -240,15 +310,42 @@
         disableMobile: "true",   
         onChange: function(selectedDates, dateStr, instance) {
             if (dateStr) {
-                processCalculation(selectedDates[0], dateStr);
+                selectedGlobalDate = selectedDates[0];
+                originalGlobalStr = dateStr;
+                calculateDate();
             }
         }
     });
 
-    function processCalculation(selectedDate, originalDateStr) {
-        let expiryDate = new Date(selectedDate);
-        expiryDate.setFullYear(expiryDate.getFullYear() - 1);
-        expiryDate.setDate(expiryDate.getDate() + 10);
+    function toggleCustomDays() {
+        const isChecked = document.getElementById('customToggle').checked;
+        document.getElementById('customDaysSection').style.display = isChecked ? 'block' : 'none';
+        if (selectedGlobalDate) calculateDate();
+    }
+
+    function handleSliderInput() {
+        const days = document.getElementById('daysSlider').value;
+        document.getElementById('daysValue').innerText = `${days} أيام`;
+        if (selectedGlobalDate) calculateDate();
+    }
+
+    function calculateDate() {
+        if (!selectedGlobalDate) return;
+        
+        let expiryDate = new Date(selectedGlobalDate);
+        const isCustom = document.getElementById('customToggle').checked;
+        
+        if (isCustom) {
+            // الحسبة المخصصة بناءً على سحب المستخدم للأيام
+            const minusDays = parseInt(document.getElementById('daysSlider').value);
+            expiryDate.setDate(expiryDate.getDate() - minusDays);
+            document.getElementById('resultTitleText').innerText = `التاريخ المستهدف (قبل الموعد بـ ${minusDays} يوماً):`;
+        } else {
+            // الحسبة الثابتة الأساسية (سنة إلا 10 أيام)
+            expiryDate.setFullYear(expiryDate.getFullYear() - 1);
+            expiryDate.setDate(expiryDate.getDate() + 10);
+            document.getElementById('resultTitleText').innerText = "التاريخ المستهدف (سنة إلا 10 أيام):";
+        }
 
         const day = String(expiryDate.getDate()).padStart(2, '0');
         const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
@@ -259,7 +356,7 @@
         document.getElementById('resultBox').style.display = 'block';
 
         updateCountdown(expiryDate);
-        saveToHistory(originalDateStr, targetDateStr);
+        saveToHistory(originalGlobalStr, targetDateStr);
     }
 
     function updateCountdown(targetDate) {
@@ -289,18 +386,19 @@
 
     function shareWhatsApp() {
         const dateText = document.getElementById('reminderDateText').innerText;
-        const text = `تاريخ التذكير المستهدف لتجديد الإقامة (سنة إلا 10 أيام) هو: ${dateText}`;
+        const text = `تاريخ التذكير المستهدف لتجديد الإقامة هو: ${dateText}`;
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function clearDate() {
         picker.clear(); 
+        selectedGlobalDate = null;
         document.getElementById('resultBox').style.display = 'none'; 
     }
 
     function saveToHistory(expiry, reminder) {
         let history = JSON.parse(localStorage.getItem('iqama_history')) || [];
-        if(history.length > 0 && history[0].expiry === expiry) return;
+        if(history.length > 0 && history[0].reminder === reminder) return;
         
         history.unshift({ expiry, reminder });
         if (history.length > 5) history.pop();
