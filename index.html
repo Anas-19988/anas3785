@@ -61,7 +61,6 @@
             transition: background-color 0.3s ease;
         }
 
-        /* زر تحويل الوضع الداكن */
         .theme-toggle {
             position: absolute;
             top: 15px;
@@ -111,7 +110,7 @@
             box-sizing: border-box;
             transition: all 0.3s ease;
             text-align: right; 
-            direction: rlt;   
+            direction: rtl;   
             cursor: pointer;
             font-variant-numeric: lining-nums;
             font-feature-settings: "lnum";
@@ -156,15 +155,12 @@
         .result-title { font-size: 0.95rem; color: var(--primary-color); margin-bottom: 8px; font-weight: 600; }
         .result-date { font-size: 1.6rem; font-weight: 800; color: var(--text-color); letter-spacing: 1px; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
         
-        /* أزرار الإجراءات للنتيجة */
         .actions-wrapper { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
         .action-icon-btn { background-color: var(--card-bg); color: var(--text-color); padding: 8px 12px; font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .action-icon-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
 
-        /* العداد التنازلي */
         .countdown-text { margin-top: 10px; font-size: 0.85rem; color: var(--muted-text); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
 
-        /* جدول السجل */
         .history-section { margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
         .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-color); }
         .history-table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); font-size: 0.85rem; }
@@ -239,8 +235,6 @@
 
     function processCalculation(selectedDate, originalDateStr) {
         let expiryDate = new Date(selectedDate);
-
-        // الحسبة الثابتة
         expiryDate.setFullYear(expiryDate.getFullYear() - 1);
         expiryDate.setDate(expiryDate.getDate() + 10);
 
@@ -249,14 +243,10 @@
         const year = expiryDate.getFullYear();
         const targetDateStr = `${day} / ${month} / ${year}`;
 
-        // عرض النتيجة
         document.getElementById('reminderDateText').innerText = targetDateStr;
         document.getElementById('resultBox').style.display = 'block';
 
-        // حساب العداد التنازلي الحقيقي
         updateCountdown(expiryDate);
-
-        // إضافة السجل لـ LocalStorage وحفظه
         saveToHistory(originalDateStr, targetDateStr);
     }
 
@@ -278,7 +268,6 @@
         }
     }
 
-    // إدارة ميزة نسخ التاريخ
     function copyResult() {
         const dateText = document.getElementById('reminderDateText').innerText;
         navigator.clipboard.writeText(dateText).then(() => {
@@ -286,20 +275,17 @@
         });
     }
 
-    // إدارة ميزة مشاركة واتساب
     function shareWhatsApp() {
         const dateText = document.getElementById('reminderDateText').innerText;
         const text = `تاريخ التذكير المستهدف لتجديد الإقامة (سنة إلا 10 أيام) هو: ${dateText}`;
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    // تصفير البيانات
     function clearDate() {
         picker.clear(); 
         document.getElementById('resultBox').style.display = 'none'; 
     }
 
-    // إدارة وضع الليل والنهار (Dark Mode)
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -308,14 +294,12 @@
         localStorage.setItem('theme', targetTheme);
     }
 
-    // إدارة وعرض السجلات المحفوظة في ذاكرة المتصفح
     function saveToHistory(expiry, reminder) {
         let history = JSON.parse(localStorage.getItem('iqama_history')) || [];
-        // تصفية لمنع التكرار المتتالي
         if(history.length > 0 && history[0].expiry === expiry) return;
         
         history.unshift({ expiry, reminder });
-        if (history.length > 5) history.pop(); // الاحتفاظ بآخر 5 عمليات فقط
+        if (history.length > 5) history.pop();
         
         localStorage.setItem('iqama_history', JSON.stringify(history));
         renderHistory();
@@ -339,7 +323,6 @@
         historySection.style.display = 'block';
     }
 
-    // تحميل الإعدادات الافتراضية عند فتح الموقع أول مرة
     window.onload = function() {
         renderHistory();
         const savedTheme = localStorage.getItem('theme') || 'light';
