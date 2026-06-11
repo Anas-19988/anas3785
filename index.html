@@ -238,4 +238,247 @@
 
         .history-section { position: relative; z-index: 1; margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
         .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: #0369a1; }
-        .history-table { width: 100%; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 14px; overflow: hidden; border: 2px solid rgba(255, 255,
+        .history-table { width: 100%; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 14px; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.8); font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .history-table th, .history-table td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(2, 132, 199, 0.15); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; color: #0f172a; font-weight: 600; }
+        .history-table th { background-color: rgba(2, 132, 199, 0.25); color: #0369a1; font-weight: 700; }
+        .history-table tr:last-child td { border-bottom: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .flatpickr-calendar, .flatpickr-day, .flatpickr-months, .flatpickr-current-month .numInputWrapper {
+            font-variant-numeric: lining-nums !important; font-feature-settings: "lnum" !important;
+        }
+    </style>
+</head>
+<body>
+
+<svg class="sun-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="12" fill="#ebc034" stroke="#c99718" stroke-width="0.5"/>
+    <g fill="none" stroke="#ebc034" stroke-width="1.2" stroke-linecap="round">
+        <path d="M50 10 V35 M50 65 V90 M10 50 H35 M65 50 H90 M22 22 L38 38 M62 62 L78 78 M78 22 L62 38 M38 62 L22 78"/>
+    </g>
+</svg>
+
+<div class="container">
+    <button id="installAppBtn" class="pwa-install-btn" onclick="triggerPWAInstall()">📱 تثبيت التطبيق على الجوال</button>
+
+    <h2>حاسبة تاريخ تجديد الإقامة الذكية</h2>
+    
+    <div class="form-group">
+        <label for="expiryDate">تاريخ انتهاء الإقامة الحالية:</label>
+        <div class="input-wrapper">
+            <input type="text" id="expiryDate" class="date-input" placeholder="يوم / شهر / سنة" readonly>
+            <button class="btn clear-btn" onclick="clearDate()" title="مسح التاريخ">
+                <svg class="trash-icon" viewBox="0 0 24 24">
+                    <path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9m2 5h2v10h-2V8m-4 0h2v10H7V8m8 0h2v10h-2V8z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="toggle-container">
+        <div class="toggle-label">تعديل عدد الأيام يدوياً (سحب مخصص)</div>
+        <label class="switch">
+            <input type="checkbox" id="customToggle" onchange="toggleCustomDays()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="custom-days-section" id="customDaysSection">
+        <label>اسحب لتحديد عدد الأيام المراد طرحها:</label>
+        <div class="slider-wrapper">
+            <input type="range" id="daysSlider" class="range-slider" min="1" max="90" value="10" oninput="handleSliderInput()">
+            <span class="days-badge" id="daysValue">10 أيام</span>
+        </div>
+    </div>
+
+    <div class="result-box" id="resultBox">
+        <div class="result-title" id="resultTitleText">التاريخ المستهدف (سنة إلا 10 أيام):</div>
+        <div class="result-date" id="reminderDateText">-- / -- / ----</div>
+        <div class="countdown-text" id="countdownText"></div>
+        
+        <div class="actions-wrapper">
+            <button class="action-icon-btn" onclick="copyResult()">📋 نسخ التاريخ</button>
+            <button class="action-icon-btn" onclick="shareWhatsApp()" style="border-color:#22c55e; color:#22c55e;">🟢 مشاركة</button>
+        </div>
+    </div>
+</div>
+
+<div class="history-section" id="historySection" style="display: none;">
+    <div class="history-title">آخر العمليات المحسوبة:</div>
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>تاريخ الانتهاء</th>
+                <th>تاريخ التذكير</th>
+            </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+    </table>
+</div>
+
+<script>
+    flatpickr.l10ns.ar.numeralArr = []; 
+    let selectedGlobalDate = null;
+    let originalGlobalStr = "";
+    let deferredPrompt = null;
+    
+    const picker = flatpickr("#expiryDate", {
+        locale: "ar",            
+        dateFormat: "d / m / Y", 
+        disableMobile: "true",   
+        onChange: function(selectedDates, dateStr, instance) {
+            if (dateStr) {
+                selectedGlobalDate = selectedDates[0];
+                originalGlobalStr = dateStr;
+                calculateDate();
+            }
+        }
+    });
+
+    // إدارة ميزة تثبيت الرابط على الجوال (PWA)
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // إظهار الزر للمستخدم لأن الجوال يدعم الميزة حالياً
+        document.getElementById('installAppBtn').style.display = 'block';
+    });
+
+    function triggerPWAInstall() {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            }
+            deferredPrompt = null;
+            document.getElementById('installAppBtn').style.display = 'none';
+        });
+    }
+
+    // تفعيل الـ Service Worker برمجياً داخلياً لتأكيد صلاحية التطبيق بالمتصفحات
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            const blob = new Blob([`
+                self.addEventListener('fetch', (e) => {
+                    // كود لتأثير التشغيل الفوري والكامل للتطبيق
+                });
+            `], { type: 'text/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error', err));
+        });
+    }
+
+    function toggleCustomDays() {
+        const isChecked = document.getElementById('customToggle').checked;
+        document.getElementById('customDaysSection').style.display = isChecked ? 'block' : 'none';
+        if (selectedGlobalDate) calculateDate();
+    }
+
+    function handleSliderInput() {
+        const days = document.getElementById('daysSlider').value;
+        document.getElementById('daysValue').innerText = `${days} أيام`;
+        if (selectedGlobalDate) calculateDate();
+    }
+
+    function calculateDate() {
+        if (!selectedGlobalDate) return;
+        
+        let expiryDate = new Date(selectedGlobalDate);
+        const isCustom = document.getElementById('customToggle').checked;
+        
+        if (isCustom) {
+            const minusDays = parseInt(document.getElementById('daysSlider').value);
+            expiryDate.setDate(expiryDate.getDate() - minusDays);
+            document.getElementById('resultTitleText').innerText = `التاريخ المستهدف (قبل الموعد بـ ${minusDays} يوماً):`;
+        } else {
+            expiryDate.setFullYear(expiryDate.getFullYear() - 1);
+            expiryDate.setDate(expiryDate.getDate() + 10);
+            document.getElementById('resultTitleText').innerText = "التاريخ المستهدف (سنة إلا 10 أيام):";
+        }
+
+        const day = String(expiryDate.getDate()).padStart(2, '0');
+        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+        const year = expiryDate.getFullYear();
+        const targetDateStr = `${day} / ${month} / ${year}`;
+
+        document.getElementById('reminderDateText').innerText = targetDateStr;
+        document.getElementById('resultBox').style.display = 'block';
+
+        updateCountdown(expiryDate);
+        saveToHistory(originalGlobalStr, targetDateStr);
+    }
+
+    function updateCountdown(targetDate) {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        targetDate.setHours(0,0,0,0);
+        
+        const timeDiff = targetDate - today;
+        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        
+        const countdownEl = document.getElementById('countdownText');
+        if (daysDiff > 0) {
+            countdownEl.innerText = `متبقي على هذا التاريخ: ${daysDiff} يوماً.`;
+        } else if (daysDiff === 0) {
+            countdownEl.innerText = `هذا التاريخ يصادف اليوم!`;
+        } else {
+            countdownEl.innerText = `هذا التاريخ مضى عليه ${Math.abs(daysDiff)} يوماً.`;
+        }
+    }
+
+    function copyResult() {
+        const dateText = document.getElementById('reminderDateText').innerText;
+        navigator.clipboard.writeText(dateText).then(() => {
+            alert('تم نسخ التاريخ بنجاح: ' + dateText);
+        });
+    }
+
+    function shareWhatsApp() {
+        const dateText = document.getElementById('reminderDateText').innerText;
+        const text = `تاريخ التذكير المستهدف لتجديد الإقامة هو: ${dateText}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function clearDate() {
+        picker.clear(); 
+        selectedGlobalDate = null;
+        document.getElementById('resultBox').style.display = 'none'; 
+    }
+
+    function saveToHistory(expiry, reminder) {
+        let history = JSON.parse(localStorage.getItem('iqama_history')) || [];
+        if(history.length > 0 && history[0].reminder === reminder) return;
+        
+        history.unshift({ expiry, reminder });
+        if (history.length > 5) history.pop();
+        
+        localStorage.setItem('iqama_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('iqama_history')) || [];
+        const historySection = document.getElementById('historySection');
+        const historyBody = document.getElementById('historyBody');
+        
+        if (history.length === 0) {
+            historySection.style.display = 'none';
+            return;
+        }
+        
+        historyBody.innerHTML = '';
+        history.forEach(item => {
+            const row = `<tr><td>${item.expiry}</td><td>${item.reminder}</td></tr>`;
+            historyBody.innerHTML += row;
+        });
+        historySection.style.display = 'block';
+    }
+
+    window.onload = function() {
+        renderHistory();
+    }
+</script>
+
+</body>
+</html>
