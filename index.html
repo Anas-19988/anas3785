@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة تاريخ تجديد الإقامة</title>
+    <title>حاسبة تاريخ تجديد الإقامة المتطورة</title>
     
     <meta name="google-site-verification" content="Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I" />
-
-    <meta name="description" content="حاسبة إلكترونية سريعة لحساب تاريخ تجديد الإقامة قبل سنة إلا 10 أيام بدقة وسهولة.">
+    <meta name="description" content="حاسبة إلكترونية متطورة لحساب تاريخ تجديد الإقامة قبل سنة إلا 10 أيام مع ميزة الحفظ التلقائي والوضع الداكن.">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -19,74 +18,112 @@
             --bg-color: #f1f5f9;
             --card-bg: #ffffff;
             --text-color: #0f172a;
+            --muted-text: #475569;
+            --border-color: #cbd5e1;
             --danger-color: #ef4444;
+            --box-bg: #f0f9ff;
+            --box-border: #bae6fd;
         }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --muted-text: #94a3b8;
+            --border-color: #334155;
+            --box-bg: #0c4a6e33;
+            --box-border: #0284c7;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            transition: background-color 0.3s ease;
         }
+
         .container {
             background-color: var(--card-bg);
             padding: 35px 25px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             text-align: center;
+            position: relative;
+            transition: background-color 0.3s ease;
         }
+
+        /* زر تحويل الوضع الداكن */
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
         h2 {
             color: var(--primary-color);
             margin-bottom: 25px;
             font-size: 1.4rem;
             font-weight: 700;
         }
+
         .form-group {
             margin-bottom: 25px;
             text-align: right;
         }
+
         label {
             display: block;
             margin-bottom: 10px;
             font-weight: 600;
             font-size: 0.95rem;
-            color: #475569;
+            color: var(--muted-text);
         }
+
         .input-wrapper {
             display: flex;
             gap: 10px;
             align-items: center;
         }
+
         input.date-input {
             flex: 1;
             padding: 14px;
-            border: 2px solid #cbd5e1;
+            border: 2px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
             border-radius: 10px;
             font-size: 1.1rem;
             box-sizing: border-box;
             transition: all 0.3s ease;
             text-align: right; 
-            direction: rtl;   
-            background-color: #ffffff;
+            direction: rlt;   
             cursor: pointer;
-            /* إجبار المتصفح على عرض الأرقام الإنجليزية داخل المربع */
             font-variant-numeric: lining-nums;
             font-feature-settings: "lnum";
         }
+
         input.date-input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
         }
-        .clear-btn {
-            background-color: #fee2e2;
-            border: 2px solid #fca5a5;
+
+        .btn {
+            border: 2px solid var(--border-color);
             border-radius: 10px;
             padding: 12px 14px;
             cursor: pointer;
@@ -94,66 +131,66 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+            background-color: transparent;
         }
-        .clear-btn:hover {
-            background-color: var(--danger-color);
-            border-color: var(--danger-color);
+
+        .clear-btn {
+            background-color: #fee2e2;
+            border-color: #fca5a5;
         }
-        .clear-btn:hover .trash-icon {
-            fill: #ffffff;
-        }
-        .trash-icon {
-            width: 20px;
-            height: 20px;
-            fill: var(--danger-color);
-        }
+        .clear-btn:hover { background-color: var(--danger-color); border-color: var(--danger-color); }
+        .clear-btn:hover .trash-icon { fill: #ffffff; }
+        .trash-icon { width: 20px; height: 20px; fill: var(--danger-color); }
+
         .result-box {
             margin-top: 25px;
             padding: 20px;
-            background-color: #f0f9ff;
-            border: 1px solid #bae6fd;
+            background-color: var(--box-bg);
+            border: 1px solid var(--box-border);
             border-radius: 12px;
             text-align: center;
             display: none;
             animation: fadeIn 0.4s ease-out;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .result-title {
-            font-size: 0.95rem;
-            color: #0369a1;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .result-date {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #0c4a6e;
-            letter-spacing: 1px;
-            /* إجبار أرقام النتيجة على الظهور بالتسلسل الإنجليزي أيضاً */
-            font-variant-numeric: lining-nums;
-            font-feature-settings: "lnum";
-        }
-        /* إجبار لوحة التقويم بالكامل على استخدام الأرقام الإنجليزية */
+
+        .result-title { font-size: 0.95rem; color: var(--primary-color); margin-bottom: 8px; font-weight: 600; }
+        .result-date { font-size: 1.6rem; font-weight: 800; color: var(--text-color); letter-spacing: 1px; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
+        
+        /* أزرار الإجراءات للنتيجة */
+        .actions-wrapper { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .action-icon-btn { background-color: var(--card-bg); color: var(--text-color); padding: 8px 12px; font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .action-icon-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+        /* العداد التنازلي */
+        .countdown-text { margin-top: 10px; font-size: 0.85rem; color: var(--muted-text); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
+
+        /* جدول السجل */
+        .history-section { margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
+        .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-color); }
+        .history-table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); font-size: 0.85rem; }
+        .history-table th, .history-table td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
+        .history-table th { background-color: var(--box-bg); color: var(--primary-color); font-weight: 600; }
+        .history-table tr:last-child td { border-bottom: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .flatpickr-calendar, .flatpickr-day, .flatpickr-months, .flatpickr-current-month .numInputWrapper {
-            font-variant-numeric: lining-nums !important;
-            font-feature-settings: "lnum" !important;
+            font-variant-numeric: lining-nums !important; font-feature-settings: "lnum" !important;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>حاسبة تاريخ تجديد الإقامة</h2>
+    <button class="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">🌙</button>
+
+    <h2>حاسبة تاريخ تجديد الإقامة الذكية</h2>
     
     <div class="form-group">
         <label for="expiryDate">تاريخ انتهاء الإقامة الحالية:</label>
         <div class="input-wrapper">
             <input type="text" id="expiryDate" class="date-input" placeholder="يوم / شهر / سنة" readonly>
-            
-            <button class="clear-btn" onclick="clearDate()" title="مسح التاريخ بالكامل">
+            <button class="btn clear-btn" onclick="clearDate()" title="مسح التاريخ">
                 <svg class="trash-icon" viewBox="0 0 24 24">
                     <path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9m2 5h2v10h-2V8m-4 0h2v10H7V8m8 0h2v10h-2V8z"/>
                 </svg>
@@ -164,12 +201,30 @@
     <div class="result-box" id="resultBox">
         <div class="result-title">التاريخ المستهدف (سنة إلا 10 أيام):</div>
         <div class="result-date" id="reminderDateText">-- / -- / ----</div>
+        <div class="countdown-text" id="countdownText"></div>
+        
+        <div class="actions-wrapper">
+            <button class="action-icon-btn" onclick="copyResult()">📋 نسخ التاريخ</button>
+            <button class="action-icon-btn" onclick="shareWhatsApp()" style="border-color:#22c55e; color:#22c55e;">🟢 مشاركة</button>
+        </div>
     </div>
 </div>
 
+<div class="history-section" id="historySection" style="display: none;">
+    <div class="history-title">آخر العمليات المحسوبة:</div>
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>تاريخ الانتهاء</th>
+                <th>تاريخ التذكير</th>
+            </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+    </table>
+</div>
+
 <script>
-    // إعداد التخصيص العربي للتقويم مع تعديل الأرقام لتصبح إنجليزية تلقائياً
-    flatpickr.l10ns.ar.numeralArr = []; // هذا السطر يقوم بإلغاء تحويل الأرقام إلى هندية (١، ٢، ٣)
+    flatpickr.l10ns.ar.numeralArr = []; 
     
     const picker = flatpickr("#expiryDate", {
         locale: "ar",            
@@ -177,30 +232,119 @@
         disableMobile: "true",   
         onChange: function(selectedDates, dateStr, instance) {
             if (dateStr) {
-                calculateReminderDate(selectedDates[0]);
+                processCalculation(selectedDates[0], dateStr);
             }
         }
     });
 
-    function calculateReminderDate(selectedDate) {
+    function processCalculation(selectedDate, originalDateStr) {
         let expiryDate = new Date(selectedDate);
 
+        // الحسبة الثابتة
         expiryDate.setFullYear(expiryDate.getFullYear() - 1);
         expiryDate.setDate(expiryDate.getDate() + 10);
 
         const day = String(expiryDate.getDate()).padStart(2, '0');
         const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
         const year = expiryDate.getFullYear();
+        const targetDateStr = `${day} / ${month} / ${year}`;
 
-        const formattedDate = `${day} / ${month} / ${year}`;
-
-        document.getElementById('reminderDateText').innerText = formattedDate;
+        // عرض النتيجة
+        document.getElementById('reminderDateText').innerText = targetDateStr;
         document.getElementById('resultBox').style.display = 'block';
+
+        // حساب العداد التنازلي الحقيقي
+        updateCountdown(expiryDate);
+
+        // إضافة السجل لـ LocalStorage وحفظه
+        saveToHistory(originalDateStr, targetDateStr);
     }
 
+    function updateCountdown(targetDate) {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        targetDate.setHours(0,0,0,0);
+        
+        const timeDiff = targetDate - today;
+        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        
+        const countdownEl = document.getElementById('countdownText');
+        if (daysDiff > 0) {
+            countdownEl.innerText = `متبقي على هذا التاريخ: ${daysDiff} يوماً.`;
+        } else if (daysDiff === 0) {
+            countdownEl.innerText = `هذا التاريخ يصادف اليوم!`;
+        } else {
+            countdownEl.innerText = `هذا التاريخ مضى عليه ${Math.abs(daysDiff)} يوماً.`;
+        }
+    }
+
+    // إدارة ميزة نسخ التاريخ
+    function copyResult() {
+        const dateText = document.getElementById('reminderDateText').innerText;
+        navigator.clipboard.writeText(dateText).then(() => {
+            alert('تم نسخ التاريخ بنجاح: ' + dateText);
+        });
+    }
+
+    // إدارة ميزة مشاركة واتساب
+    function shareWhatsApp() {
+        const dateText = document.getElementById('reminderDateText').innerText;
+        const text = `تاريخ التذكير المستهدف لتجديد الإقامة (سنة إلا 10 أيام) هو: ${dateText}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // تصفير البيانات
     function clearDate() {
         picker.clear(); 
         document.getElementById('resultBox').style.display = 'none'; 
+    }
+
+    // إدارة وضع الليل والنهار (Dark Mode)
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', targetTheme);
+        document.querySelector('.theme-toggle').innerText = targetTheme === 'dark' ? '☀️' : '🌙';
+        localStorage.setItem('theme', targetTheme);
+    }
+
+    // إدارة وعرض السجلات المحفوظة في ذاكرة المتصفح
+    function saveToHistory(expiry, reminder) {
+        let history = JSON.parse(localStorage.getItem('iqama_history')) || [];
+        // تصفية لمنع التكرار المتتالي
+        if(history.length > 0 && history[0].expiry === expiry) return;
+        
+        history.unshift({ expiry, reminder });
+        if (history.length > 5) history.pop(); // الاحتفاظ بآخر 5 عمليات فقط
+        
+        localStorage.setItem('iqama_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('iqama_history')) || [];
+        const historySection = document.getElementById('historySection');
+        const historyBody = document.getElementById('historyBody');
+        
+        if (history.length === 0) {
+            historySection.style.display = 'none';
+            return;
+        }
+        
+        historyBody.innerHTML = '';
+        history.forEach(item => {
+            const row = `<tr><td>${item.expiry}</td><td>${item.reminder}</td></tr>`;
+            historyBody.innerHTML += row;
+        });
+        historySection.style.display = 'block';
+    }
+
+    // تحميل الإعدادات الافتراضية عند فتح الموقع أول مرة
+    window.onload = function() {
+        renderHistory();
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.querySelector('.theme-toggle').innerText = savedTheme === 'dark' ? '☀️' : '🌙';
     }
 </script>
 
