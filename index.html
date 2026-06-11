@@ -15,23 +15,29 @@
     <style>
         :root {
             --primary-color: #0284c7;
-            --text-color: #f8fafc;
-            --muted-text: #cbd5e1;
-            --border-color: rgba(255, 255, 255, 0.2);
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --muted-text: #475569;
+            --border-color: #cbd5e1;
             --danger-color: #ef4444;
-            --card-bg: rgba(15, 23, 42, 0.75); /* خلفية زجاجية داكنة لتناسب الصورة */
-            --box-bg: rgba(12, 74, 110, 0.4);
+            --box-bg: #f0f9ff;
+            --box-border: #bae6fd;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --muted-text: #94a3b8;
+            --border-color: #334155;
+            --box-bg: #0c4a6e33;
             --box-border: #0284c7;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* تم استبدال الرابط برابط مضمون ومباشر لصورة ميسي والأرجنتين */
-            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1695240833139-2a9d8fa9e5bb?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
             flex-direction: column;
@@ -40,30 +46,38 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            transition: background-color 0.3s ease;
         }
 
         .container {
             background-color: var(--card-bg);
-            backdrop-filter: blur(12px); /* تأثير ضبابي زجاجي احترافي خلف الصندوق */
-            -webkit-backdrop-filter: blur(12px);
             padding: 35px 25px;
-            border-radius: 24px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 440px;
             text-align: center;
             position: relative;
-            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            padding: 5px;
+            border-radius: 50%;
         }
 
         h2 {
-            color: #38bdf8; /* لون سماوي مشرق متناسق مع علم الأرجنتين */
+            color: var(--primary-color);
             margin-bottom: 25px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            margin-top: 0;
         }
 
         .form-group {
@@ -77,7 +91,6 @@
             font-weight: 600;
             font-size: 0.95rem;
             color: var(--muted-text);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .input-wrapper {
@@ -90,14 +103,14 @@
             flex: 1;
             padding: 14px;
             border: 2px solid var(--border-color);
-            background-color: rgba(15, 23, 42, 0.6);
-            color: #ffffff;
-            border-radius: 12px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 10px;
             font-size: 1.1rem;
             box-sizing: border-box;
             transition: all 0.3s ease;
             text-align: right; 
-            direction: rtl; 
+            direction: rtl;   
             cursor: pointer;
             font-variant-numeric: lining-nums;
             font-feature-settings: "lnum";
@@ -105,56 +118,54 @@
 
         input.date-input:focus {
             outline: none;
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+            border-color: var(--primary-color);
         }
 
         .btn {
             border: 2px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 12px 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            background-color: rgba(15, 23, 42, 0.6);
-            box-sizing: border-box;
+            background-color: transparent;
         }
 
         .clear-btn {
-            background-color: rgba(254, 226, 226, 0.15);
-            border-color: rgba(252, 165, 165, 0.4);
+            background-color: #fee2e2;
+            border-color: #fca5a5;
         }
         .clear-btn:hover { background-color: var(--danger-color); border-color: var(--danger-color); }
         .clear-btn:hover .trash-icon { fill: #ffffff; }
-        .trash-icon { width: 20px; height: 20px; fill: #fca5a5; }
+        .trash-icon { width: 20px; height: 20px; fill: var(--danger-color); }
 
         .result-box {
             margin-top: 25px;
             padding: 20px;
             background-color: var(--box-bg);
             border: 1px solid var(--box-border);
-            border-radius: 14px;
+            border-radius: 12px;
             text-align: center;
             display: none;
             animation: fadeIn 0.4s ease-out;
         }
 
-        .result-title { font-size: 0.95rem; color: #38bdf8; margin-bottom: 8px; font-weight: 600; }
-        .result-date { font-size: 1.7rem; font-weight: 800; color: #ffffff; letter-spacing: 1px; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .result-title { font-size: 0.95rem; color: var(--primary-color); margin-bottom: 8px; font-weight: 600; }
+        .result-date { font-size: 1.6rem; font-weight: 800; color: var(--text-color); letter-spacing: 1px; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
         
         .actions-wrapper { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .action-icon-btn { background-color: rgba(15, 23, 42, 0.5); color: #ffffff; padding: 10px 14px; font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s; }
-        .action-icon-btn:hover { border-color: #38bdf8; color: #38bdf8; background-color: rgba(15, 23, 42, 0.8); }
+        .action-icon-btn { background-color: var(--card-bg); color: var(--text-color); padding: 8px 12px; font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .action-icon-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
 
-        .countdown-text { margin-top: 10px; font-size: 0.9rem; color: #e2e8f0; font-weight: 500; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
+        .countdown-text { margin-top: 10px; font-size: 0.85rem; color: var(--muted-text); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
 
         .history-section { margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
-        .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: #38bdf8; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-        .history-table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); font-size: 0.85rem; }
-        .history-table th, .history-table td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; color: #ffffff; }
-        .history-table th { background-color: rgba(12, 74, 110, 0.5); color: #38bdf8; font-weight: 600; }
+        .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-color); }
+        .history-table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); font-size: 0.85rem; }
+        .history-table th, .history-table td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
+        .history-table th { background-color: var(--box-bg); color: var(--primary-color); font-weight: 600; }
         .history-table tr:last-child td { border-bottom: none; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -162,16 +173,13 @@
         .flatpickr-calendar, .flatpickr-day, .flatpickr-months, .flatpickr-current-month .numInputWrapper {
             font-variant-numeric: lining-nums !important; font-feature-settings: "lnum" !important;
         }
-        .flatpickr-calendar { background: #1e293b !important; border: 1px solid #334155 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important; }
-        .flatpickr-day { color: #f8fafc !important; }
-        .flatpickr-day.selected { background: #0284c7 !important; border-color: #0284c7 !important; }
-        .flatpickr-months .flatpickr-month, .flatpickr-weekdays, span.flatpickr-weekday { background: #1e293b !important; color: #f8fafc !important; fill: #f8fafc !important; }
-        .flatpickr-current-month { color: #f8fafc !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">🌙</button>
+
     <h2>حاسبة تاريخ تجديد الإقامة الذكية</h2>
     
     <div class="form-group">
@@ -278,6 +286,14 @@
         document.getElementById('resultBox').style.display = 'none'; 
     }
 
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', targetTheme);
+        document.querySelector('.theme-toggle').innerText = targetTheme === 'dark' ? '☀️' : '🌙';
+        localStorage.setItem('theme', targetTheme);
+    }
+
     function saveToHistory(expiry, reminder) {
         let history = JSON.parse(localStorage.getItem('iqama_history')) || [];
         if(history.length > 0 && history[0].expiry === expiry) return;
@@ -309,6 +325,9 @@
 
     window.onload = function() {
         renderHistory();
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.querySelector('.theme-toggle').innerText = savedTheme === 'dark' ? '☀️' : '🌙';
     }
 </script>
 
