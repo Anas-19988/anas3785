@@ -17,10 +17,10 @@
             --primary-color: #0284c7;
             --text-color: #0f172a; 
             --muted-text: #334155;
-            --border-color: rgba(2, 132, 199, 0.25);
+            --border-color: rgba(2, 132, 199, 0.3);
             --danger-color: #ef4444;
-            --card-bg: rgba(255, 255, 255, 0.4); /* صندوق زجاجي شفاف وناعم */
-            --box-bg: rgba(255, 255, 255, 0.65);
+            --card-bg: rgba(255, 255, 255, 0.5); /* صندوق زجاجي نقي */
+            --box-bg: rgba(255, 255, 255, 0.8);
             --box-border: #0284c7;
         }
 
@@ -35,7 +35,7 @@
             align-items: center;
             box-sizing: border-box;
             
-            /* رسم علم الأرجنتين برمجياً بنسبة 100% */
+            /* رسم علم الأرجنتين برمجياً بنسبة 100% ليكون سريعاً ومضموناً */
             background: linear-gradient(
                 to bottom,
                 #74acdf 0%, #74acdf 33.33%,
@@ -43,38 +43,32 @@
                 #74acdf 66.66%, #74acdf 100%
             );
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* دمج ميسي محتضناً كأس العالم برمجياً بشكل مباشر وآمن 100% */
-        body::before {
-            content: "";
+        /* رسم شمس الأرجنتين الذهبية برمجياً بالكامل في المنتصف بدون استخدام صور خارجية */
+        .sun-bg {
             position: absolute;
-            width: 100%;
-            max-width: 500px;
-            height: 400px;
-            /* استخدام كود الصورة المباشر لضمان التفعيل الفوري */
-            background-image: url('https://i.ibb.co/v4b8ZfL/messi-wc.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.9; 
+            opacity: 0.18; /* مدمجة بشكل ناعم وراقي في الخلفية خلف الصندوق */
         }
 
         .container {
             position: relative;
             z-index: 1;
             background-color: var(--card-bg);
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
             padding: 35px 25px;
             border-radius: 24px;
             border: 2px solid rgba(255, 255, 255, 0.8); 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 440px;
             text-align: center;
@@ -112,7 +106,7 @@
             flex: 1;
             padding: 14px;
             border: 2px solid var(--border-color);
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             color: #0f172a;
             border-radius: 12px;
             font-size: 1.1rem;
@@ -141,12 +135,12 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             box-sizing: border-box;
         }
 
         .clear-btn {
-            background-color: rgba(254, 226, 226, 0.9);
+            background-color: rgba(254, 226, 226, 0.95);
             border-color: rgba(239, 68, 110, 0.3);
         }
         .clear-btn:hover { background-color: var(--danger-color); border-color: var(--danger-color); }
@@ -176,7 +170,7 @@
         /* جدول السجل */
         .history-section { position: relative; z-index: 1; margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
         .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: #0369a1; }
-        .history-table { width: 100%; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 14px; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.8); font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .history-table { width: 100%; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 14px; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.8); font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .history-table th, .history-table td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(2, 132, 199, 0.15); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; color: #0f172a; font-weight: 600; }
         .history-table th { background-color: rgba(2, 132, 199, 0.25); color: #0369a1; font-weight: 700; }
         .history-table tr:last-child td { border-bottom: none; }
@@ -189,6 +183,13 @@
     </style>
 </head>
 <body>
+
+<svg class="sun-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="12" fill="#ebc034" stroke="#c99718" stroke-width="0.5"/>
+    <g fill="none" stroke="#ebc034" stroke-width="1.2" stroke-linecap="round">
+        <path d="M50 10 V35 M50 65 V90 M10 50 H35 M65 50 H90 M22 22 L38 38 M62 62 L78 78 M78 22 L62 38 M38 62 L22 78"/>
+    </g>
+</svg>
 
 <div class="container">
     <h2>حاسبة تاريخ تجديد الإقامة الذكية</h2>
