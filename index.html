@@ -15,13 +15,13 @@
     <style>
         :root {
             --primary-color: #0284c7;
-            --text-color: #f8fafc;
-            --muted-text: #cbd5e1;
-            --border-color: rgba(255, 255, 255, 0.25);
+            --text-color: #0f172a; /* لون داكن واضح جداً فوق الشفافية البيضاء */
+            --muted-text: #334155;
+            --border-color: rgba(2, 132, 199, 0.25);
             --danger-color: #ef4444;
-            --card-bg: rgba(15, 23, 42, 0.75); /* خلفية زجاجية داكنة فاخرة */
-            --box-bg: rgba(12, 74, 110, 0.45);
-            --box-border: #38bdf8;
+            --card-bg: rgba(255, 255, 255, 0.35); /* صندوق زجاجي نقي وشفاف لإظهار الأسطورة خلفه */
+            --box-bg: rgba(255, 255, 255, 0.5);
+            --box-border: #0284c7;
         }
 
         body {
@@ -35,7 +35,7 @@
             align-items: center;
             box-sizing: border-box;
             
-            /* رسم علم الأرجنتين برمجياً بشكل نقي ومضمون الظهور 100% */
+            /* رسم علم الأرجنتين برمجياً لضمان ثبات الموقع 100% وعرضه فورا */
             background: linear-gradient(
                 to bottom,
                 #74acdf 0%, #74acdf 33.33%,
@@ -45,29 +45,36 @@
             position: relative;
         }
 
-        /* إضافة رمز الشمس الذهبية للأرجنتين في منتصف الخلفية بشكل راقي */
+        /* دمج صورة الأسطورة ميسي مع كأس العالم في منتصف العلم برمجياً بشكل متناسق مع الحاسبة */
         body::before {
-            content: "☀️";
+            content: "";
             position: absolute;
-            font-size: 8rem;
-            opacity: 0.15;
+            width: 100%;
+            max-width: 550px;
+            height: 380px;
+            /* استخدام رابط موثوق وسريع لصورة ميسي الاحتفالية بكأس العالم بخلفية مفرغة */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b4/Lionel-Messi-Argentina-2022-World-Cup-celebration_%28cropped%29.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 0;
+            opacity: 0.85; /* تباين رائع يضمن جمال الموقع وسهولة القراءة */
         }
 
         .container {
             position: relative;
             z-index: 1;
             background-color: var(--card-bg);
-            backdrop-filter: blur(16px); /* تأثير ضبابي زجاجي قوي */
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(10px); /* تأثير ضبابي راقي */
+            -webkit-backdrop-filter: blur(10px);
             padding: 35px 25px;
             border-radius: 24px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.7); /* إطار أبيض يبرز التصميم */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
             width: 100%;
             max-width: 440px;
             text-align: center;
@@ -75,11 +82,10 @@
         }
 
         h2 {
-            color: #38bdf8; /* لون سماوي مشرق متناسق */
+            color: #0369a1; /* لون كحلي مميز من درجات ألوان الأرجنتين */
             margin-bottom: 25px;
             font-size: 1.5rem;
             font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
             margin-top: 0;
         }
 
@@ -93,8 +99,7 @@
             margin-bottom: 10px;
             font-weight: 600;
             font-size: 0.95rem;
-            color: var(--muted-text);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            color: #0f172a;
         }
 
         .input-wrapper {
@@ -107,8 +112,8 @@
             flex: 1;
             padding: 14px;
             border: 2px solid var(--border-color);
-            background-color: rgba(15, 23, 42, 0.6);
-            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #0f172a;
             border-radius: 12px;
             font-size: 1.1rem;
             box-sizing: border-box;
@@ -118,12 +123,13 @@
             cursor: pointer;
             font-variant-numeric: lining-nums;
             font-feature-settings: "lnum";
+            font-weight: 600;
         }
 
         input.date-input:focus {
             outline: none;
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
         }
 
         .btn {
@@ -135,44 +141,44 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            background-color: rgba(15, 23, 42, 0.6);
+            background-color: rgba(255, 255, 255, 0.85);
             box-sizing: border-box;
         }
 
         .clear-btn {
-            background-color: rgba(254, 226, 226, 0.15);
-            border-color: rgba(252, 165, 165, 0.4);
+            background-color: rgba(254, 226, 226, 0.85);
+            border-color: rgba(239, 68, 110, 0.3);
         }
         .clear-btn:hover { background-color: var(--danger-color); border-color: var(--danger-color); }
         .clear-btn:hover .trash-icon { fill: #ffffff; }
-        .trash-icon { width: 20px; height: 20px; fill: #fca5a5; }
+        .trash-icon { width: 20px; height: 20px; fill: #ef4444; }
 
         .result-box {
             margin-top: 25px;
             padding: 20px;
-            background-color: var(--box-bg);
-            border: 1px solid var(--box-border);
+            background-color: rgba(2, 132, 199, 0.15);
+            border: 2px solid var(--box-border);
             border-radius: 14px;
             text-align: center;
             display: none;
             animation: fadeIn 0.4s ease-out;
         }
 
-        .result-title { font-size: 0.95rem; color: #38bdf8; margin-bottom: 8px; font-weight: 600; }
-        .result-date { font-size: 1.7rem; font-weight: 800; color: #ffffff; letter-spacing: 1px; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .result-title { font-size: 0.95rem; color: #0369a1; margin-bottom: 8px; font-weight: 700; }
+        .result-date { font-size: 1.7rem; font-weight: 800; color: #0f172a; letter-spacing: 1px; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
         
         .actions-wrapper { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .action-icon-btn { background-color: rgba(15, 23, 42, 0.5); color: #ffffff; padding: 10px 14px; font-size: 0.9rem; font-weight: 600; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s; }
-        .action-icon-btn:hover { border-color: #38bdf8; color: #38bdf8; background-color: rgba(15, 23, 42, 0.8); }
+        .action-icon-btn { background-color: #ffffff; color: #0f172a; padding: 10px 14px; font-size: 0.9rem; font-weight: 600; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s; }
+        .action-icon-btn:hover { border-color: #0284c7; color: #0284c7; background-color: rgba(2, 132, 199, 0.05); }
 
-        .countdown-text { margin-top: 10px; font-size: 0.9rem; color: #e2e8f0; font-weight: 500; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
+        .countdown-text { margin-top: 10px; font-size: 0.9rem; color: #1e293b; font-weight: 600; font-variant-numeric: lining-nums; font-feature-settings: "lnum"; }
 
         /* جدول السجل */
         .history-section { position: relative; z-index: 1; margin-top: 30px; text-align: right; width: 100%; max-width: 440px; }
-        .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: #1e3a8a; text-shadow: 0 1px 1px rgba(255,255,255,0.6); }
-        .history-table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-        .history-table th, .history-table td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; color: #ffffff; }
-        .history-table th { background-color: rgba(12, 74, 110, 0.6); color: #38bdf8; font-weight: 600; }
+        .history-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: #0369a1; }
+        .history-table { width: 100%; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 14px; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.7); font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .history-table th, .history-table td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(2, 132, 199, 0.15); font-variant-numeric: lining-nums; font-feature-settings: "lnum"; color: #0f172a; font-weight: 600; }
+        .history-table th { background-color: rgba(2, 132, 199, 0.25); color: #0369a1; font-weight: 700; }
         .history-table tr:last-child td { border-bottom: none; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -180,11 +186,6 @@
         .flatpickr-calendar, .flatpickr-day, .flatpickr-months, .flatpickr-current-month .numInputWrapper {
             font-variant-numeric: lining-nums !important; font-feature-settings: "lnum" !important;
         }
-        .flatpickr-calendar { background: #1e293b !important; border: 1px solid #334155 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important; }
-        .flatpickr-day { color: #f8fafc !important; }
-        .flatpickr-day.selected { background: #0284c7 !important; border-color: #0284c7 !important; }
-        .flatpickr-months .flatpickr-month, .flatpickr-weekdays, span.flatpickr-weekday { background: #1e293b !important; color: #f8fafc !important; fill: #f8fafc !important; }
-        .flatpickr-current-month { color: #f8fafc !important; }
     </style>
 </head>
 <body>
@@ -205,130 +206,4 @@
     </div>
 
     <div class="result-box" id="resultBox">
-        <div class="result-title">التاريخ المستهدف (سنة إلا 10 أيام):</div>
-        <div class="result-date" id="reminderDateText">-- / -- / ----</div>
-        <div class="countdown-text" id="countdownText"></div>
-        
-        <div class="actions-wrapper">
-            <button class="action-icon-btn" onclick="copyResult()">📋 نسخ التاريخ</button>
-            <button class="action-icon-btn" onclick="shareWhatsApp()" style="border-color:#22c55e; color:#22c55e;">🟢 مشاركة</button>
-        </div>
-    </div>
-</div>
-
-<div class="history-section" id="historySection" style="display: none;">
-    <div class="history-title">آخر العمليات المحسوبة:</div>
-    <table class="history-table">
-        <thead>
-            <tr>
-                <th>تاريخ الانتهاء</th>
-                <th>تاريخ التذكير</th>
-            </tr>
-        </thead>
-        <tbody id="historyBody"></tbody>
-    </table>
-</div>
-
-<script>
-    flatpickr.l10ns.ar.numeralArr = []; 
-    
-    const picker = flatpickr("#expiryDate", {
-        locale: "ar",            
-        dateFormat: "d / m / Y", 
-        disableMobile: "true",   
-        onChange: function(selectedDates, dateStr, instance) {
-            if (dateStr) {
-                processCalculation(selectedDates[0], dateStr);
-            }
-        }
-    });
-
-    function processCalculation(selectedDate, originalDateStr) {
-        let expiryDate = new Date(selectedDate);
-        expiryDate.setFullYear(expiryDate.getFullYear() - 1);
-        expiryDate.setDate(expiryDate.getDate() + 10);
-
-        const day = String(expiryDate.getDate()).padStart(2, '0');
-        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
-        const year = expiryDate.getFullYear();
-        const targetDateStr = `${day} / ${month} / ${year}`;
-
-        document.getElementById('reminderDateText').innerText = targetDateStr;
-        document.getElementById('resultBox').style.display = 'block';
-
-        updateCountdown(expiryDate);
-        saveToHistory(originalDateStr, targetDateStr);
-    }
-
-    function updateCountdown(targetDate) {
-        const today = new Date();
-        today.setHours(0,0,0,0);
-        targetDate.setHours(0,0,0,0);
-        
-        const timeDiff = targetDate - today;
-        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-        
-        const countdownEl = document.getElementById('countdownText');
-        if (daysDiff > 0) {
-            countdownEl.innerText = `متبقي على هذا التاريخ: ${daysDiff} يوماً.`;
-        } else if (daysDiff === 0) {
-            countdownEl.innerText = `هذا التاريخ يصادف اليوم!`;
-        } else {
-            countdownEl.innerText = `هذا التاريخ مضى عليه ${Math.abs(daysDiff)} يوماً.`;
-        }
-    }
-
-    function copyResult() {
-        const dateText = document.getElementById('reminderDateText').innerText;
-        navigator.clipboard.writeText(dateText).then(() => {
-            alert('تم نسخ التاريخ بنجاح: ' + dateText);
-        });
-    }
-
-    function shareWhatsApp() {
-        const dateText = document.getElementById('reminderDateText').innerText;
-        const text = `تاريخ التذكير المستهدف لتجديد الإقامة (سنة إلا 10 أيام) هو: ${dateText}`;
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function clearDate() {
-        picker.clear(); 
-        document.getElementById('resultBox').style.display = 'none'; 
-    }
-
-    function saveToHistory(expiry, reminder) {
-        let history = JSON.parse(localStorage.getItem('iqama_history')) || [];
-        if(history.length > 0 && history[0].expiry === expiry) return;
-        
-        history.unshift({ expiry, reminder });
-        if (history.length > 5) history.pop();
-        
-        localStorage.setItem('iqama_history', JSON.stringify(history));
-        renderHistory();
-    }
-
-    function renderHistory() {
-        const history = JSON.parse(localStorage.getItem('iqama_history')) || [];
-        const historySection = document.getElementById('historySection');
-        const historyBody = document.getElementById('historyBody');
-        
-        if (history.length === 0) {
-            historySection.style.display = 'none';
-            return;
-        }
-        
-        historyBody.innerHTML = '';
-        history.forEach(item => {
-            const row = `<tr><td>${item.expiry}</td><td>${item.reminder}</td></tr>`;
-            historyBody.innerHTML += row;
-        });
-        historySection.style.display = 'block';
-    }
-
-    window.onload = function() {
-        renderHistory();
-    }
-</script>
-
-</body>
-</html>
+        <div class="result-title">التاريخ المستهدف (س
